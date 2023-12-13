@@ -5,7 +5,7 @@ process fastqc {
 
   //Docker Image
   container = 'quay.io/biocontainers/fastqc:0.11.9--0'
-  label 'process_single'
+  label 'process_test'
 
   publishDir "$params.path_sample_fastqc", mode : 'copy'
 
