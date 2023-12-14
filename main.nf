@@ -5,13 +5,12 @@ process fastqc {
 
   //Docker Image
   container = 'quay.io/biocontainers/fastqc:0.11.9--0'
-  label 'process_test'
+  label 'process_single'
 
-  publishDir "$params.path_sample_fastqc", mode : 'copy'
+  publishDir "$path", mode : 'copy'
 
   input:
-  path(read1)
-  path(read2)
+  tuple val(sampleId), val(path),path(read1), path(read2)
 
   output:
   path ('*.html')
@@ -24,5 +23,10 @@ process fastqc {
 }
 
 workflow {
-    fastqc(params.read1,params.read2)
+    
+    chSampleInfo = Channel.fromPath(params.samples) \
+        | splitCsv(header:true) \
+        | map { row-> tuple(row.sampleId,row.path, row.read1, row.read2) }
+
+    fastqc(chSampleInfo)
 }
