@@ -24,7 +24,7 @@ process fastqc2 {
 
 workflow {
     
-    chSampleInfo = Channel.fromPath(params.samples) \
+    chSampleInfo = Channel.fromPath(params.samples_sheet) \
         | splitCsv(header:true) \
         | map { row-> tuple(row.sampleId,row.path, row.read1, row.read2) }
 
