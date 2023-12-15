@@ -1,7 +1,7 @@
  #! /usr/bin/env nextflow
 nextflow.enable.dsl=2
 
-process fastqc {
+process fastqc2 {
 
   //Docker Image
   container = 'quay.io/biocontainers/fastqc:0.11.9--0'
@@ -28,5 +28,5 @@ workflow {
         | splitCsv(header:true) \
         | map { row-> tuple(row.sampleId,row.path, row.read1, row.read2) }
 
-    fastqc(chSampleInfo)
+    fastqc2 (chSampleInfo)
 }
