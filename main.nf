@@ -32,5 +32,5 @@ workflow {
     chR_dummy2 = Channel.fromPath("auxiliar_programs/dummy.R")
 
     fastqc3 (chSampleInfo)
-    r_dummy (chSampleInfo,chR_dummy)
+    r_dummy2 (chSampleInfo,chR_dummy)
 }
