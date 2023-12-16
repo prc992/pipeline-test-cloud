@@ -22,6 +22,25 @@ process r_dummy4{
   """
 }
 
+process mk_dir{
+  
+  tag "creating dir for $sampleId"
+
+  input:
+  tuple val(sampleId), val(path_sample),val(read1), val(read2)
+
+  exec:
+  path_sample_sample = path_sample + "/J01"
+  
+  output:
+  val (path_sample)
+
+  script:
+  """
+  mkdir -p $path_sample_sample
+  """
+}
+
 
 workflow {
     
@@ -30,7 +49,7 @@ workflow {
         | map { row-> tuple(row.sampleId,row.path, row.read1, row.read2) }
 
     chR_dummy = Channel.fromPath("${projectDir}/auxiliar_programs/dummy.R")
-
+    mk_dir(chSampleInfo)
     fastqc3 (chSampleInfo)
     r_dummy4 (chSampleInfo,chR_dummy)
 }
