@@ -29,7 +29,7 @@ workflow {
         | splitCsv(header:true) \
         | map { row-> tuple(row.sampleId,row.path, row.read1, row.read2) }
     
-    chR_dummy2 = Channel.fromPath("auxiliar_programs/dummy.R")
+    chR_dummy = Channel.fromPath("auxiliar_programs/dummy.R")
 
     fastqc3 (chSampleInfo)
     r_dummy2 (chSampleInfo,chR_dummy)
