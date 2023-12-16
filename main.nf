@@ -3,7 +3,7 @@ nextflow.enable.dsl=2
 
 include {fastqc3} from './modules/fastqc3'
 
-process r_dummy{
+process r_dummy2{
 
   //Docker Image
   container ='prc992/pileups-report:v1.1'
@@ -29,7 +29,7 @@ workflow {
         | splitCsv(header:true) \
         | map { row-> tuple(row.sampleId,row.path, row.read1, row.read2) }
     
-    chR_dummy = Channel.fromPath("/auxiliar_programs/dummy.R")
+    chR_dummy2 = Channel.fromPath("auxiliar_programs/dummy.R")
 
     fastqc3 (chSampleInfo)
     r_dummy (chSampleInfo,chR_dummy)
