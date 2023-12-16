@@ -23,6 +23,7 @@ process r_dummy4{
 }
 
 process mk_dir{
+  container ='ubuntu:noble'
   
   tag "creating dir for $sampleId"
 
