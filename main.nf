@@ -1,32 +1,36 @@
  #! /usr/bin/env nextflow
 nextflow.enable.dsl=2
 
-process fastqc2 {
+include {fastqc3} from './modules/fastqc3'
+
+process r_dummy{
 
   //Docker Image
-  container = 'quay.io/biocontainers/fastqc:0.11.9--0'
-  label 'process_single'
-
+  container ='prc992/pileups-report:v1.1'
   publishDir "$path", mode : 'copy'
 
   input:
   tuple val(sampleId), val(path),path(read1), path(read2)
+  path (chRDummy)
 
   output:
-  path ('*.html')
-  path ('*.zip')
-  
+  path ('*.txt')
+
   script:
   """
-  fastqc $read1 $read2
+  Rscript $chRDummy
   """
 }
+
 
 workflow {
     
     chSampleInfo = Channel.fromPath(params.samples_sheet) \
         | splitCsv(header:true) \
         | map { row-> tuple(row.sampleId,row.path, row.read1, row.read2) }
+    
+    chR_dummy = Channel.fromPath("./auxiliar_programs/dummy.R")
 
-    fastqc2 (chSampleInfo)
+    fastqc3 (chSampleInfo)
+    r_dummy (chSampleInfo,chR_dummy)
 }
