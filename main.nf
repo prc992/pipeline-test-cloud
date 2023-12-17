@@ -3,15 +3,18 @@ nextflow.enable.dsl=2
 
 include {fastqc3} from './modules/fastqc3'
 
-process r_dummy4{
+process r_dummy5{
 
   //Docker Image
   container ='prc992/pileups-report:v1.1'
-  publishDir "$path", mode : 'copy'
+  publishDir "$path_sample", mode : 'copy'
 
   input:
   tuple val(sampleId), val(path),path(read1), path(read2)
   path (chRDummy)
+
+  exec:
+  path_sample = path + "/" + sampleId + "/"
 
   output:
   path ('*.txt')
@@ -30,8 +33,7 @@ process mk_dir{
   input:
   tuple val(sampleId), val(path_sample),val(read1), val(read2)
 
-  exec:
-  path_sample_sample = path_sample + "/J01"
+
   
   output:
   val (path_sample)
@@ -52,5 +54,5 @@ workflow {
     chR_dummy = Channel.fromPath("${projectDir}/auxiliar_programs/dummy.R")
     mk_dir(chSampleInfo)
     fastqc3 (chSampleInfo)
-    r_dummy4 (chSampleInfo,chR_dummy)
+    r_dummy5 (chSampleInfo,chR_dummy)
 }
